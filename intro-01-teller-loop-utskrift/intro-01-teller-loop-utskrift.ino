@@ -3,7 +3,7 @@ int teller = 0;
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600); //initialize serial communication
-  Serial.print("Programmet har starta.");
+  Serial.println("Programmet har starta.");
 }
 
 void loop() {
