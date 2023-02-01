@@ -1,4 +1,5 @@
 // Eksempel henta frå Arduino-boka (eks. 3)
+
 const int sensorPin = A0; // temperaturSensor tilkobla analog pin A0
 const float baselineTemp = 20.0;
 
