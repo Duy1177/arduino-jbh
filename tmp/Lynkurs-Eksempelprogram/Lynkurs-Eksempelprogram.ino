@@ -54,7 +54,7 @@ int SleepTime              = 5000; // Tid for dvale, for lengre tider enn 32 sek
 
 float GPSlat               = 0;    // GPS breddegrad
 float GPSlong              = 0;    // GPS lengdegrad
-unsigned long epochTime    = 0;    // GPS tidsstempel fra 1.1.1980
+unsigned long epochTime    = 0;    // GPS tidsstempel fra 1.1.1980 NB: Eigen utrekning kreves for tidspunkt
 int numSat                 = 0;    // GPS antall satellitter
 int maxNoChecks            = 10000; // Antall runder for lesing av GPS-data
 int noChecks               = 0;    // Antall nødvendige sjekk av GPS    
@@ -66,10 +66,10 @@ const int SD_CS_PIN = 4;         // Port for styring av SD-kort terminal, fabrik
 void setup() {
   pinMode(LED_BUILTIN, OUTPUT);  // Port for innebygget LED, definert som utgang                                           
 
-  analogReadResolution(12);      // Angir oppløsning for AD-konverter
+  analogReadResolution(12);      // Angir oppløsning for AD-konverter (nøyaktighet)
 
   #ifdef DEBUG 
-     Serial.begin(115200);       // Setter opp data hastighet til monitor
+     Serial.begin(115200);       // Setter opp datahastighet til monitor
   #endif
   
   if (!GPS.begin())              // Initialisering av GPS
@@ -114,10 +114,10 @@ void loop() {
   readWaterTemp();      // Inkluder måling av temp. i vann
   //readBatVolt();      // Inkluder måling av baterispenning om den er implementert
  
-  makeString();         // Bygge opp bufferet for overføring av data
-  //sdPrint();          // Skriv data til SD-terminal
-  connectToGPRS();    // Koble til GPRS-nettverket
-  connectToServer();    // Koble opp mot server og overfør data om den ikke alt er oppkoblet
+  makeString();           // Bygge opp bufferet for overføring av data
+  sdPrint();              // Skriv data til SD-terminal
+  //connectToGPRS();      // Koble til GPRS-nettverket
+  //connectToServer();    // Koble opp mot server og overfør data om den ikke alt er oppkoblet
   
   printData();
   printDataString();    // Skriv ut bufferet
