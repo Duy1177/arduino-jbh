@@ -110,12 +110,12 @@ void setup() {
 }
 
 void loop() {
-  readGPSdata1();     // Inkluder GPS
+  //readGPSdata1();     // Inkluder GPS
   readWaterTemp();      // Inkluder måling av temp. i vann
   //readBatVolt();      // Inkluder måling av baterispenning om den er implementert
  
   makeString();           // Bygge opp bufferet for overføring av data
-  sdPrint();              // Skriv data til SD-terminal
+  //sdPrint();              // Skriv data til SD-terminal
   //connectToGPRS();      // Koble til GPRS-nettverket
   //connectToServer();    // Koble opp mot server og overfør data om den ikke alt er oppkoblet
   
