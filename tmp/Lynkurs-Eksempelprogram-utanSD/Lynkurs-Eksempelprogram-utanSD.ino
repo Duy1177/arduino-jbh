@@ -26,7 +26,6 @@ NBClient client;        // Deklarerer instansen som opererer mot serveren
 GPRS gprs;              // Deklarerer instansen som opprettet kontakt med GPRS-nettet
 NB nbAccess;            // Deklarerer instansen som som gir tilgang til GPRS-nettet
 DS18B20 ds(0);          // Deklarerer instansen som kommuniserer med temp. sensoren
-File myFile;            // Deklarerer et objekt for filbehandling, kun ved bruk ved lagring på SD-kort
 
 // Deklarasjon av konstanter:
 #define DEBUG           // Kommenter bort denne dersom Serial.print ikke skal inkluderes
@@ -62,6 +61,7 @@ int noChecks               = 0;    // Antall nødvendige sjekk av GPS
 int BatVoltPin = A3;             // Analog port for tilkobling av batterispenning
 
 void setup() {
+  Serial.println("Testing, testing..");
   pinMode(LED_BUILTIN, OUTPUT);  // Port for innebygget LED, definert som utgang                                           
 
   analogReadResolution(12);      // Angir oppløsning for AD-konverter
