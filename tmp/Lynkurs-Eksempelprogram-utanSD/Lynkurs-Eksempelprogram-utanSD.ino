@@ -94,13 +94,13 @@ void setup() {
 }
 
 void loop() {
-  //readGPSdata1();     // Inkluder GPS
-  // readWaterTemp();      // Inkluder måling av temp. i vann
+  readGPSdata1();     // Inkluder GPS
+  readWaterTemp();      // Inkluder måling av temp. i vann
   //readBatVolt();      // Inkluder måling av baterispenning om den er implementert
  
   makeString();         // Bygge opp bufferet for overføring av data
-  //connectToGPRS();    // Koble til GPRS-nettverket
-  //connectToServer();    // Koble opp mot server og overfør data om den ikke alt er oppkoblet
+  connectToGPRS();    // Koble til GPRS-nettverket
+  connectToServer();    // Koble opp mot server og overfør data om den ikke alt er oppkoblet
   
   printData();
   printDataString();    // Skriv ut bufferet

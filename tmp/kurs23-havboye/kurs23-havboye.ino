@@ -18,6 +18,7 @@
 #include <Arduino_MKRENV.h> // Bibliotek for lesing av miljøkortet ENV om det brukes
 #include "ArduinoLowPower.h"// Bibliotek som legger MKR i dvale
 #include <WDTZero.h>        // Bibliotek som håndterer vakthunden
+#include <SD.h>             // Bibliotek for håndtering av SD-kort 
 #include <SPI.h>            // Bibilotek for håndtering av serie-bus
 
 // Deklarasjon av instanser:
@@ -40,7 +41,7 @@ uint8_t selected;
 // Oppkobling til server
 char server[] = "sensor.marin.ntnu.no";  // Navnet på serveren der data legges
 char path[] = "/cgi-bin/tof.cgi?";       // Angir cgi-kode for plassering i file
-char filename[]="asvg-jobjornar.txt";               // Navnet på fil for lagring av data
+char filename[]="asvgjb3.txt";           // Navnet på fil for lagring av data
 int port = 80;                           // Port 80 er default for HTTP
 boolean connected = false;               // Status oppkobling til GPRS
 char buffer[128];                        // Deklarsjon av buffer med tilhørende lengde
@@ -60,6 +61,7 @@ int noChecks               = 0;    // Antall nødvendige sjekk av GPS
 
 // Deklarasjon av porter
 int BatVoltPin = A3;             // Analog port for tilkobling av batterispenning
+const int SD_CS_PIN = 4;         // Port for styring av SD-kort terminal, fabrikkbestemt
 
 void setup() {
   pinMode(LED_BUILTIN, OUTPUT);  // Port for innebygget LED, definert som utgang                                           
@@ -77,8 +79,21 @@ void setup() {
    #endif
   }
 
-  GPS.begin();              // Initialisering av GPS
   SPI.begin();
+
+   if(!SD.begin(SD_CS_PIN)) 
+  {
+    #ifdef DEBUG
+    Serial.println("Initialisering SD terminal mislyktes");
+    Serial.println("Har du satt i SD-kort?");
+    #endif
+  }
+
+  // Lag en file med navnet DataFile.txt - Maks 8 karakterer + .txt
+  myFile = SD.open("jobis2.txt", FILE_WRITE);
+  delay(1000);
+  myFile.close();
+  delay(100);
 
   // Initialiserer dvale-funksjon
   LowPower.attachInterruptWakeup(RTC_ALARM_WAKEUP, dummy, CHANGE);
@@ -94,13 +109,14 @@ void setup() {
 }
 
 void loop() {
-  readGPSdata1();     // Inkluder GPS
+  //readGPSdata1();     // Inkluder GPS
   readWaterTemp();      // Inkluder måling av temp. i vann
   //readBatVolt();      // Inkluder måling av baterispenning om den er implementert
  
   makeString();         // Bygge opp bufferet for overføring av data
+  //sdPrint();          // Skriv data til SD-terminal
   connectToGPRS();    // Koble til GPRS-nettverket
-  connectToServer();    // Koble opp mot server og overfør data om den ikke alt er oppkoblet
+  connectToServer();  // Koble opp mot server og overfør data om den ikke alt er oppkoblet
   
   printData();
   printDataString();    // Skriv ut bufferet
@@ -196,6 +212,18 @@ void connectToGPRS()
       break;
     }
   }
+}
+
+void sdPrint(){
+
+  myFile = SD.open("jobis2.txt", FILE_WRITE);
+  delay(1000);
+
+  if (myFile) 
+   {
+    myFile.println(buffer);
+    myFile.close();
+   }
 }
 
 // Funksjonen kobler opp til server og skriver databuffer til serveren
